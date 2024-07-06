@@ -40,96 +40,96 @@
 * 실제 코드 구현
 
 <code>
-#include <iostream>
-
-class	FlyBehavior
-{
+	#include <iostream>
+	
+	class	FlyBehavior
+	{
+		public:
+		virtual void	fly() = 0;
+	};
+	
+	class	QuackBehavior
+	{
+		public:
+		virtual void	quack() = 0;
+	};
+	
+	class	Duck
+	{
+	private:
+		FlyBehavior		*flybehavior;
+		QuackBehavior	*quackBehavior;
 	public:
-	virtual void	fly() = 0;
-};
-
-class	QuackBehavior
-{
+		Duck(FlyBehavior *fly, QuackBehavior *quack) {
+			flybehavior = fly;
+			quackBehavior = quack;
+		}
+		void	hello()
+		{
+			std::cout<<"hello. I'm Duck."<<std::endl;
+		}
+		void	swim()
+		{
+			std::cout<<"every duck can swim!!"<<std::endl;
+		}
+		void	performFly()
+		{
+			flybehavior->fly();
+		}
+		void	performQuack()
+		{
+			quackBehavior->quack();
+		}
+	};
+	
+	class Quack : public QuackBehavior
+	{
 	public:
-	virtual void	quack() = 0;
-};
-
-class	Duck
-{
-private:
-	FlyBehavior		*flybehavior;
-	QuackBehavior	*quackBehavior;
-public:
-	Duck(FlyBehavior *fly, QuackBehavior *quack) {
-		flybehavior = fly;
-		quackBehavior = quack;
-	}
-	void	hello()
+		void	quack()
+		{
+			std::cout<<"Quack"<<std::endl;
+		}
+	};
+	
+	class MuteQuack : public QuackBehavior
 	{
-		std::cout<<"hello. I'm Duck."<<std::endl;
-	}
-	void	swim()
+	public:
+		void	quack()
+		{
+			std::cout<<"--Mute--"<<std::endl;
+		}
+	};
+	
+	class FlyWithWings : public FlyBehavior
 	{
-		std::cout<<"every duck can swim!!"<<std::endl;
-	}
-	void	performFly()
+	public:
+		void	fly()
+		{
+			std::cout<<"I'm flying!!"<<std::endl;
+		}
+	};
+	
+	class FlyNoWay : public FlyBehavior
 	{
-		flybehavior->fly();
-	}
-	void	performQuack()
+	public:
+		void	fly()
+		{
+			std::cout<<"I can't fly!!"<<std::endl;
+		}
+	};
+	
+	class	MallardDuck : public Duck
 	{
-		quackBehavior->quack();
-	}
-};
-
-class Quack : public QuackBehavior
-{
-public:
-	void	quack()
+	public :
+		MallardDuck() : Duck(new FlyWithWings(), new Quack()){}
+	};
+	
+	int main()
 	{
-		std::cout<<"Quack"<<std::endl;
+		Duck	*mallard = new MallardDuck();
+		mallard->performFly();
+		mallard->performQuack();
 	}
-};
-
-class MuteQuack : public QuackBehavior
-{
-public:
-	void	quack()
-	{
-		std::cout<<"--Mute--"<<std::endl;
-	}
-};
-
-class FlyWithWings : public FlyBehavior
-{
-public:
-	void	fly()
-	{
-		std::cout<<"I'm flying!!"<<std::endl;
-	}
-};
-
-class FlyNoWay : public FlyBehavior
-{
-public:
-	void	fly()
-	{
-		std::cout<<"I can't fly!!"<<std::endl;
-	}
-};
-
-class	MallardDuck : public Duck
-{
-public :
-	MallardDuck() : Duck(new FlyWithWings(), new Quack()){}
-};
-
-int main()
-{
-	Duck	*mallard = new MallardDuck();
-	mallard->performFly();
-	mallard->performQuack();
-}
 </code>
 
 - setFlyBehavior(Flybehavior fd) 이러한 세터 메서드를 통해서 동적으로 행동을 지정하는 방식도 있다.
